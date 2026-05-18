@@ -1,0 +1,1210 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>SyncroLife PREMIUM by Estegosaurio</title>
+
+<link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.css" rel="stylesheet">
+
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Segoe UI;
+}
+
+body{
+background:linear-gradient(135deg,#1e293b,#334155,#475569);
+color:white;
+min-height:100vh;
+padding:20px;
+}
+
+header{
+text-align:center;
+font-size:32px;
+font-weight:bold;
+margin-bottom:20px;
+color:#93c5fd;
+}
+
+.container{
+display:grid;
+grid-template-columns:minmax(0,1.5fr) 350px;
+gap:20px;
+}
+
+.panel{
+background:rgba(255,255,255,0.08);
+backdrop-filter:blur(12px);
+padding:20px;
+border-radius:20px;
+box-shadow:0 0 20px rgba(0,0,0,0.3);
+margin-bottom:20px;
+}
+
+#calendar{
+background:white;
+color:black;
+padding:15px;
+border-radius:20px;
+overflow-x:auto;
+}
+
+input,select,button{
+width:100%;
+padding:12px;
+margin-top:10px;
+border:none;
+border-radius:12px;
+font-size:15px;
+}
+
+input,select{
+background:#e2e8f0;
+}
+
+button{
+background:#38bdf8;
+color:white;
+cursor:pointer;
+font-weight:bold;
+transition:0.3s;
+}
+
+button:hover{
+transform:scale(1.03);
+background:#0ea5e9;
+}
+
+.task{
+background:rgba(255,255,255,0.1);
+padding:12px;
+margin-top:10px;
+border-radius:12px;
+transition:0.3s;
+word-break:break-word;
+}
+
+.task:hover{
+background:rgba(255,255,255,0.2);
+}
+
+.search{
+margin-bottom:15px;
+}
+
+.fc-event{
+cursor:pointer;
+font-size:14px !important;
+padding:6px !important;
+border-radius:10px !important;
+font-weight:bold;
+border:none !important;
+overflow:hidden;
+white-space:normal !important;
+line-height:1.3;
+}
+
+.fc-toolbar-title{
+font-size:24px !important;
+font-weight:bold;
+}
+
+.fc-button{
+border-radius:10px !important;
+border:none !important;
+background:#38bdf8 !important;
+}
+
+.fc-button:hover{
+background:#0ea5e9 !important;
+}
+
+.fc-daygrid-event-dot{
+display:none !important;
+}
+
+.fc-scroller{
+overflow:auto !important;
+}
+
+.moneyDelete{
+margin-top:10px;
+background:#ef4444;
+padding:8px;
+font-size:13px;
+}
+
+.moneyDelete:hover{
+background:#dc2626;
+}
+
+.clientBtn{
+margin-top:8px;
+padding:8px;
+font-size:13px;
+}
+
+.previewImg{
+width:100%;
+border-radius:12px;
+margin-top:10px;
+}
+
+@media(max-width:900px){
+
+.container{
+grid-template-columns:1fr;
+}
+
+}
+
+@media(max-width:768px){
+
+body{
+padding:10px;
+}
+
+header{
+font-size:22px;
+}
+
+.panel{
+padding:15px;
+border-radius:15px;
+}
+
+#calendar{
+padding:12px;
+border-radius:15px;
+}
+
+.fc{
+font-size:13px !important;
+}
+
+.fc-toolbar{
+display:flex !important;
+flex-direction:column !important;
+gap:15px;
+}
+
+.fc-toolbar-title{
+font-size:18px !important;
+text-align:center;
+}
+
+.fc-button{
+font-size:12px !important;
+padding:10px !important;
+}
+
+.fc-event{
+font-size:13px !important;
+padding:8px !important;
+min-height:60px;
+line-height:1.4;
+}
+
+.fc-timegrid-event{
+min-height:75px !important;
+}
+
+.fc-event-title{
+white-space:normal !important;
+}
+
+}
+
+</style>
+</head>
+
+<body>
+
+<header>🚀 SyncroLife by Estegosaurio</header>
+
+<div class="container">
+
+<div class="panel">
+
+<div class="search">
+
+<input 
+type="text" 
+id="search" 
+placeholder="🔍 Buscar citas..." 
+onkeyup="searchEvents()"
+>
+
+</div>
+
+<div id="calendar"></div>
+
+</div>
+
+<div>
+
+<div class="panel">
+
+<h2>📅 Nueva cita</h2>
+
+<input id="text" placeholder="Nombre cliente">
+
+<select id="status">
+<option>📘 Pendiente</option>
+<option>📗 Aceptada</option>
+<option>📕 Cancelada</option>
+</select>
+
+<input id="date" type="datetime-local">
+
+<button onclick="addEvent()">
+Añadir cita
+</button>
+
+<button onclick="sendAppointments()">
+📅 Enviar citas
+</button>
+
+<button onclick="sendTasks()">
+🏠 Enviar tareas
+</button>
+
+<button onclick="sendShopping()">
+🛒 Enviar compra
+</button>
+
+<button onclick="sendMoney()">
+💰 Enviar facturación
+</button>
+
+<button onclick="exportPDF()">
+📄 Exportar PDF
+</button>
+
+</div>
+
+<div class="panel">
+
+<h2>🏠 Tareas hogar</h2>
+
+<input id="homeTask" placeholder="Nueva tarea hogar">
+
+<button onclick="addHomeTask()">
+Añadir tarea
+</button>
+
+<div id="homeList"></div>
+
+</div>
+
+<div class="panel">
+
+<h2>🛒 Lista de compra</h2>
+
+<input id="shoppingItem" placeholder="Añadir producto">
+
+<button onclick="addShopping()">
+Añadir producto
+</button>
+
+<div id="shoppingList"></div>
+
+</div>
+
+<div class="panel">
+
+<h2>💰 Facturación mensual</h2>
+
+<input id="moneyText" placeholder="Descripción">
+
+<input 
+id="moneyAmount" 
+type="number" 
+placeholder="Cantidad €"
+>
+
+<select id="moneyType">
+<option value="ingreso">💵 Cobro</option>
+<option value="gasto">💸 Gasto</option>
+</select>
+
+<button onclick="addMoney()">
+Guardar movimiento
+</button>
+
+<div id="moneyList"></div>
+
+<h3 id="balance">
+Balance: 0€
+</h3>
+
+</div>
+
+<div class="panel">
+
+<h2>👤 Ficha clientes</h2>
+
+<input id="clientName" placeholder="Nombre cliente">
+
+<input id="clientPhone" placeholder="Teléfono">
+
+<button onclick="addClient()">
+Guardar cliente
+</button>
+
+<div id="clientList"></div>
+
+</div>
+
+<div class="panel">
+
+<h2>📸 Facturas / Imágenes</h2>
+
+<input type="file" id="invoiceFile">
+
+<div id="invoicePreview"></div>
+
+</div>
+
+<div class="panel">
+
+<h2>🔎 Buscador global</h2>
+
+<input 
+id="globalSearch"
+placeholder="Buscar en toda la app..."
+onkeyup="globalSearch()"
+>
+
+<div id="globalResults"></div>
+
+</div>
+
+</div>
+
+</div>
+
+<script>
+
+let calendar;
+
+let events = JSON.parse(localStorage.getItem("events") || "[]");
+
+let homeTasks = JSON.parse(localStorage.getItem("homeTasks") || "[]");
+
+let shopping = JSON.parse(localStorage.getItem("shopping") || "[]");
+
+let money = JSON.parse(localStorage.getItem("money") || "[]");
+
+let clients = JSON.parse(localStorage.getItem("clients") || "[]");
+
+document.addEventListener('DOMContentLoaded',()=>{
+
+calendar = new FullCalendar.Calendar(
+document.getElementById('calendar'),
+
+{
+
+initialView:
+window.innerWidth < 768
+? 'timeGridDay'
+: 'dayGridMonth',
+
+locale:'es',
+
+editable:true,
+
+height:'auto',
+
+eventDrop: saveEvents,
+
+eventResize: saveEvents,
+
+headerToolbar:{
+left:'prev,next today',
+center:'title',
+right:'dayGridMonth,timeGridWeek,timeGridDay'
+},
+
+buttonText:{
+today:'Hoy',
+month:'Mes',
+week:'Semana',
+day:'Día'
+},
+
+events:events,
+
+eventClick:function(info){
+
+let option = prompt(
+
+`EDITAR CITA
+
+1 = 📘 Pendiente
+2 = 📗 Aceptada
+3 = 📕 Cancelada
+4 = ❌ Eliminar`
+
+);
+
+if(option=="1"){
+
+info.event.setProp(
+"title",
+"📘 Pendiente " + cleanTitle(info.event.title)
+);
+
+info.event.setProp(
+"backgroundColor",
+"#3b82f6"
+);
+
+}
+
+else if(option=="2"){
+
+info.event.setProp(
+"title",
+"📗 Aceptada " + cleanTitle(info.event.title)
+);
+
+info.event.setProp(
+"backgroundColor",
+"#22c55e"
+);
+
+}
+
+else if(option=="3"){
+
+info.event.setProp(
+"title",
+"📕 Cancelada " + cleanTitle(info.event.title)
+);
+
+info.event.setProp(
+"backgroundColor",
+"#ef4444"
+);
+
+}
+
+else if(option=="4"){
+
+info.event.remove();
+
+}
+
+saveEvents();
+
+confettiBoom();
+
+}
+
+});
+
+calendar.render();
+
+renderHomeTasks();
+renderShopping();
+renderMoney();
+renderClients();
+
+document
+.getElementById("invoiceFile")
+.addEventListener("change",uploadInvoice);
+
+});
+
+function cleanTitle(title){
+
+return title
+.replace("📘 Pendiente ","")
+.replace("📗 Aceptada ","")
+.replace("📕 Cancelada ","");
+
+}
+
+function confettiBoom(){
+
+confetti({
+particleCount:120,
+spread:90,
+origin:{y:0.6}
+});
+
+}
+
+function addEvent(){
+
+let text =
+document.getElementById("text").value;
+
+let status =
+document.getElementById("status").value;
+
+let date =
+document.getElementById("date").value;
+
+if(!text || !date) return;
+
+let color = "#3b82f6";
+
+if(status.includes("Aceptada")){
+color = "#22c55e";
+}
+
+if(status.includes("Cancelada")){
+color = "#ef4444";
+}
+
+let event = {
+
+title: status + " " + text,
+
+start: date,
+
+backgroundColor: color
+
+};
+
+calendar.addEvent(event);
+
+saveEvents();
+
+confettiBoom();
+
+document.getElementById("text").value="";
+document.getElementById("date").value="";
+
+}
+
+function saveEvents(){
+
+let evs = calendar.getEvents().map(e=>({
+
+title:e.title,
+
+start:e.start,
+
+backgroundColor:e.backgroundColor
+
+}));
+
+localStorage.setItem(
+"events",
+JSON.stringify(evs)
+);
+
+}
+
+function searchEvents(){
+
+let search =
+document.getElementById("search")
+.value
+.toLowerCase();
+
+calendar.getEvents().forEach(ev=>{
+
+if(ev.title.toLowerCase().includes(search)){
+
+ev.setProp("display","auto");
+
+}else{
+
+ev.setProp("display","none");
+
+}
+
+});
+
+}
+
+function sendAppointments(){
+
+let txt = "📅 CITAS\n\n";
+
+calendar.getEvents().forEach(e=>{
+
+txt += "• " + e.title + "\n";
+
+txt +=
+new Date(e.start).toLocaleString()
++ "\n\n";
+
+});
+
+window.open(
+"https://wa.me/?text="
++ encodeURIComponent(txt)
+);
+
+}
+
+function sendTasks(){
+
+let txt = "🏠 TAREAS HOGAR\n\n";
+
+homeTasks.forEach(t=>{
+
+txt += "• " + t + "\n";
+
+});
+
+window.open(
+"https://wa.me/?text="
++ encodeURIComponent(txt)
+);
+
+}
+
+function sendShopping(){
+
+let txt = "🛒 LISTA COMPRA\n\n";
+
+shopping.forEach(s=>{
+
+txt += "• " + s + "\n";
+
+});
+
+window.open(
+"https://wa.me/?text="
++ encodeURIComponent(txt)
+);
+
+}
+
+function sendMoney(){
+
+let txt = "💰 FACTURACIÓN\n\n";
+
+money.forEach(m=>{
+
+txt +=
+(m.type=="ingreso" ? "💵 " : "💸 ")
++ "[" + m.category + "] "
++ m.text
++ " - "
++ m.amount
++ "€\n";
+
+});
+
+window.open(
+"https://wa.me/?text="
++ encodeURIComponent(txt)
+);
+
+}
+
+function addHomeTask(){
+
+let task =
+document.getElementById("homeTask").value;
+
+if(!task) return;
+
+homeTasks.push(task);
+
+localStorage.setItem(
+"homeTasks",
+JSON.stringify(homeTasks)
+);
+
+renderHomeTasks();
+
+confettiBoom();
+
+document.getElementById("homeTask").value="";
+
+}
+
+function renderHomeTasks(){
+
+let div =
+document.getElementById("homeList");
+
+div.innerHTML="";
+
+homeTasks.forEach((t,i)=>{
+
+div.innerHTML += `
+<div class="task" onclick="deleteTask(${i})">
+🏠 ${t}
+</div>
+`;
+
+});
+
+}
+
+function deleteTask(i){
+
+if(confirm("¿Eliminar tarea?")){
+
+homeTasks.splice(i,1);
+
+localStorage.setItem(
+"homeTasks",
+JSON.stringify(homeTasks)
+);
+
+renderHomeTasks();
+
+confettiBoom();
+
+}
+
+}
+
+function addShopping(){
+
+let item =
+document.getElementById("shoppingItem").value;
+
+if(!item) return;
+
+shopping.push(item);
+
+localStorage.setItem(
+"shopping",
+JSON.stringify(shopping)
+);
+
+renderShopping();
+
+confettiBoom();
+
+document.getElementById("shoppingItem").value="";
+
+}
+
+function renderShopping(){
+
+let div =
+document.getElementById("shoppingList");
+
+div.innerHTML="";
+
+shopping.forEach((item,index)=>{
+
+div.innerHTML += `
+<div class="task" onclick="deleteShopping(${index})">
+🛒 ${item}
+</div>
+`;
+
+});
+
+}
+
+function deleteShopping(index){
+
+if(confirm("¿Eliminar producto?")){
+
+shopping.splice(index,1);
+
+localStorage.setItem(
+"shopping",
+JSON.stringify(shopping)
+);
+
+renderShopping();
+
+confettiBoom();
+
+}
+
+}
+
+function addMoney(){
+
+let text =
+document.getElementById("moneyText").value;
+
+let amount = Number(
+document.getElementById("moneyAmount").value
+);
+
+let type =
+document.getElementById("moneyType").value;
+
+let category = prompt(
+"Categoría:\nCasa, Comida, Trabajo..."
+);
+
+if(!text || !amount) return;
+
+money.push({
+text,
+amount,
+type,
+category
+});
+
+localStorage.setItem(
+"money",
+JSON.stringify(money)
+);
+
+renderMoney();
+
+confettiBoom();
+
+document.getElementById("moneyText").value="";
+document.getElementById("moneyAmount").value="";
+
+}
+
+function renderMoney(){
+
+let div =
+document.getElementById("moneyList");
+
+let total = 0;
+
+div.innerHTML="";
+
+money.forEach((m,index)=>{
+
+if(m.type=="ingreso"){
+total += m.amount;
+}else{
+total -= m.amount;
+}
+
+div.innerHTML += `
+
+<div class="task">
+
+${m.type=="ingreso"?"💵":"💸"} 
+[${m.category}] 
+${m.text} - ${m.amount}€
+
+<button 
+class="moneyDelete"
+onclick="deleteMoney(${index})"
+>
+
+❌ Eliminar
+
+</button>
+
+</div>
+
+`;
+
+});
+
+document.getElementById("balance").innerHTML =
+"Balance: " + total + "€";
+
+}
+
+function deleteMoney(index){
+
+if(confirm("¿Eliminar movimiento?")){
+
+money.splice(index,1);
+
+localStorage.setItem(
+"money",
+JSON.stringify(money)
+);
+
+renderMoney();
+
+confettiBoom();
+
+}
+
+}
+
+function addClient(){
+
+let name =
+document.getElementById("clientName").value;
+
+let phone =
+document.getElementById("clientPhone").value;
+
+if(!name || !phone) return;
+
+clients.push({name,phone});
+
+localStorage.setItem(
+"clients",
+JSON.stringify(clients)
+);
+
+renderClients();
+
+document.getElementById("clientName").value="";
+document.getElementById("clientPhone").value="";
+
+confettiBoom();
+
+}
+
+function renderClients(){
+
+let div =
+document.getElementById("clientList");
+
+div.innerHTML="";
+
+clients.forEach((c,index)=>{
+
+div.innerHTML += `
+
+<div class="task">
+
+👤 ${c.name}<br>
+📞 ${c.phone}
+
+<button 
+class="clientBtn"
+onclick="callClient('${c.phone}')"
+>
+📞 Llamar
+</button>
+
+<button 
+class="clientBtn"
+onclick="whatsappClient('${c.phone}')"
+>
+💬 WhatsApp
+</button>
+
+<button 
+class="moneyDelete"
+onclick="deleteClient(${index})"
+>
+
+❌ Eliminar
+
+</button>
+
+</div>
+
+`;
+
+});
+
+}
+
+function callClient(phone){
+
+window.location.href = "tel:" + phone;
+
+}
+
+function whatsappClient(phone){
+
+window.open(
+"https://wa.me/" + phone
+);
+
+}
+
+function deleteClient(index){
+
+clients.splice(index,1);
+
+localStorage.setItem(
+"clients",
+JSON.stringify(clients)
+);
+
+renderClients();
+
+}
+
+function uploadInvoice(event){
+
+let file = event.target.files[0];
+
+if(!file) return;
+
+let reader = new FileReader();
+
+reader.onload = function(e){
+
+document.getElementById(
+"invoicePreview"
+).innerHTML += `
+
+<div class="task">
+
+<img 
+src="${e.target.result}" 
+class="previewImg"
+>
+
+</div>
+
+`;
+
+};
+
+reader.readAsDataURL(file);
+
+}
+
+function globalSearch(){
+
+let q =
+document.getElementById("globalSearch")
+.value
+.toLowerCase();
+
+let results = "";
+
+calendar.getEvents().forEach(e=>{
+
+if(e.title.toLowerCase().includes(q)){
+
+results += `
+<div class="task">
+📅 ${e.title}
+</div>
+`;
+
+}
+
+});
+
+homeTasks.forEach(t=>{
+
+if(t.toLowerCase().includes(q)){
+
+results += `
+<div class="task">
+🏠 ${t}
+</div>
+`;
+
+}
+
+});
+
+shopping.forEach(s=>{
+
+if(s.toLowerCase().includes(q)){
+
+results += `
+<div class="task">
+🛒 ${s}
+</div>
+`;
+
+}
+
+});
+
+money.forEach(m=>{
+
+if(m.text.toLowerCase().includes(q)){
+
+results += `
+<div class="task">
+💰 ${m.text}
+</div>
+`;
+
+}
+
+});
+
+clients.forEach(c=>{
+
+if(c.name.toLowerCase().includes(q)){
+
+results += `
+<div class="task">
+👤 ${c.name}
+</div>
+`;
+
+}
+
+});
+
+document.getElementById(
+"globalResults"
+).innerHTML = results;
+
+}
+
+function exportPDF(){
+
+let content = "SYNCROLIFE PREMIUM\n\n";
+
+content += "📅 CITAS\n\n";
+
+calendar.getEvents().forEach(e=>{
+
+content +=
+e.title
++ " - "
++ new Date(e.start).toLocaleString()
++ "\n";
+
+});
+
+content += "\n🏠 TAREAS\n\n";
+
+homeTasks.forEach(t=>{
+content += t + "\n";
+});
+
+content += "\n🛒 LISTA DE COMPRA\n\n";
+
+shopping.forEach(s=>{
+content += s + "\n";
+});
+
+content += "\n💰 FACTURACIÓN\n\n";
+
+money.forEach(m=>{
+
+content +=
+"[" + m.category + "] "
++ m.text
++ " - "
++ m.amount
++ "€\n";
+
+});
+
+let w = window.open();
+
+w.document.write(
+"<pre style='font-size:18px'>"
++ content +
+"</pre>"
+);
+
+w.print();
+
+confettiBoom();
+
+}
+
+</script>
+
+</body>
+</html>

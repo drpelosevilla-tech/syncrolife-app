@@ -1,0 +1,37 @@
+{
+<<<<<<< HEAD
+  "name": "syncrolife",
+  "version": "1.0.0",
+  "description": "SyncroLife PREMIUM",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "build": "electron-builder"
+  },
+  "build": {
+    "appId": "com.estegosaurio.syncrolife",
+    "productName": "SyncroLife PREMIUM",
+    "win": {
+      "target": "nsis"
+    }
+  },
+  "devDependencies": {
+    "electron": "^30.0.0",
+    "electron-builder": "^24.13.3"
+  }
+}
+=======
+  "name": "syncrolife-webapp",
+  "version": "1.0.0",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2"
+  },
+  "engines": {
+    "node": "18.x"
+  }
+}
+>>>>>>> 111c8ee05320ea3e9d066918f3f3aecc8344d643
